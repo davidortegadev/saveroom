@@ -8,13 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 class HomeController {
 
     @GetMapping("/")
-    @ResponseBody
     public String home(){
-        return "Home page placeholder!";
-    }
-
-    @GetMapping("/home")
-    public String welcome() {
         return "home";
     }
+
 }

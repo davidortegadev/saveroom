@@ -3,20 +3,34 @@ package com.codeup.saveroom.models;
 import javax.persistence.*;
 
 @Entity
+@Table(name="posts")
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userID;
+//    @Column(nullable = false)
+//    private Long userID;
 
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String body;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+    public Post() {
+    }
+
+    public Post(long id, String title, String body){
+        this.id = id;
+        this.title = title;
+        this.body = body;
+    }
 
     public Long getId() {
         return id;
@@ -26,13 +40,13 @@ public class Post {
         this.id = id;
     }
 
-    public Long getUserID(){
-        return userID;
-    }
+//    public Long getUserID(){
+//        return userID;
+//    }
 
-    public void setUserID(Long id) {
-
-    }
+//    public void setUserID(Long id) {
+//
+//    }
 
     public String getTitle() {
         return title;
@@ -48,5 +62,13 @@ public class Post {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

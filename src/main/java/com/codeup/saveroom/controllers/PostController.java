@@ -1,20 +1,23 @@
 package com.codeup.saveroom.controllers;
 
+import com.codeup.saveroom.models.Post;
+import com.codeup.saveroom.models.User;
 import com.codeup.saveroom.repositories.PostRepo;
+import com.codeup.saveroom.repositories.UserRepo;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class PostController {
 
     private PostRepo postDao;
+    private UserRepo userDao;
 
-    public PostController(PostRepo postDao) {
+    public PostController(PostRepo postDao, UserRepo userDao) {
         this.postDao = postDao;
+        this.userDao = userDao;
     }
 
     @GetMapping("/posts")
@@ -30,15 +33,19 @@ public class PostController {
     }
 
     @GetMapping("/posts/create")
-    @ResponseBody
     public String getCreatePostForm(){
-        return "This is where you'll create a post";
+        return "posts/create";
     }
 
     @PostMapping("/posts/create")
-    @ResponseBody
-    public String createPost(){
-        return "Post successfully created! (in the future)";
+    public String createPost(@RequestParam String title, @RequestParam String body){
+        Post newPost = new Post();
+        newPost.setTitle(title);
+        newPost.setBody(body);
+        User loggedIn = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        newPost.setUser(loggedIn);
+        postDao.save(newPost);
+        return "redirect:/posts";
     }
 
 }
